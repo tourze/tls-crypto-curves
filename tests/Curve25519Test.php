@@ -50,10 +50,6 @@ class Curve25519Test extends TestCase
      */
     public function test_generate_key_pair_success(): void
     {
-        if (!class_exists('ParagonIE_Sodium_Compat')) {
-            $this->markTestSkipped('sodium_compat库不可用，无法测试Curve25519');
-        }
-
         $keyPair = $this->curve->generateKeyPair();
 
         $this->assertArrayHasKey('privateKey', $keyPair);
@@ -67,10 +63,6 @@ class Curve25519Test extends TestCase
      */
     public function test_generate_key_pair_returns_correct_lengths(): void
     {
-        if (!class_exists('ParagonIE_Sodium_Compat')) {
-            $this->markTestSkipped('sodium_compat库不可用，无法测试Curve25519');
-        }
-
         $keyPair = $this->curve->generateKeyPair();
 
         // X25519密钥长度应该都是32字节
@@ -83,10 +75,6 @@ class Curve25519Test extends TestCase
      */
     public function test_generate_key_pair_returns_different_keys(): void
     {
-        if (!class_exists('ParagonIE_Sodium_Compat')) {
-            $this->markTestSkipped('sodium_compat库不可用，无法测试Curve25519');
-        }
-
         $keyPair1 = $this->curve->generateKeyPair();
         $keyPair2 = $this->curve->generateKeyPair();
 
@@ -99,10 +87,6 @@ class Curve25519Test extends TestCase
      */
     public function test_derive_public_key_success(): void
     {
-        if (!class_exists('ParagonIE_Sodium_Compat')) {
-            $this->markTestSkipped('sodium_compat库不可用，无法测试Curve25519');
-        }
-
         $keyPair = $this->curve->generateKeyPair();
         $derivedPublicKey = $this->curve->derivePublicKey($keyPair['privateKey']);
 
@@ -115,10 +99,6 @@ class Curve25519Test extends TestCase
      */
     public function test_derive_public_key_with_invalid_length_throws_exception(): void
     {
-        if (!class_exists('ParagonIE_Sodium_Compat')) {
-            $this->markTestSkipped('sodium_compat库不可用，无法测试Curve25519');
-        }
-
         $this->expectException(CurveException::class);
         $this->expectExceptionMessage('无效的Curve25519私钥长度');
         
@@ -130,10 +110,6 @@ class Curve25519Test extends TestCase
      */
     public function test_derive_public_key_with_empty_string_throws_exception(): void
     {
-        if (!class_exists('ParagonIE_Sodium_Compat')) {
-            $this->markTestSkipped('sodium_compat库不可用，无法测试Curve25519');
-        }
-
         $this->expectException(CurveException::class);
         $this->expectExceptionMessage('无效的Curve25519私钥长度');
         
@@ -145,10 +121,6 @@ class Curve25519Test extends TestCase
      */
     public function test_derive_public_key_with_wrong_length_throws_exception(): void
     {
-        if (!class_exists('ParagonIE_Sodium_Compat')) {
-            $this->markTestSkipped('sodium_compat库不可用，无法测试Curve25519');
-        }
-
         $this->expectException(CurveException::class);
         $this->expectExceptionMessage('无效的Curve25519私钥长度');
         
@@ -161,10 +133,6 @@ class Curve25519Test extends TestCase
      */
     public function test_derive_public_key_with_too_long_key_throws_exception(): void
     {
-        if (!class_exists('ParagonIE_Sodium_Compat')) {
-            $this->markTestSkipped('sodium_compat库不可用，无法测试Curve25519');
-        }
-
         $this->expectException(CurveException::class);
         $this->expectExceptionMessage('无效的Curve25519私钥长度');
         
@@ -177,10 +145,6 @@ class Curve25519Test extends TestCase
      */
     public function test_derive_public_key_consistency(): void
     {
-        if (!class_exists('ParagonIE_Sodium_Compat')) {
-            $this->markTestSkipped('sodium_compat库不可用，无法测试Curve25519');
-        }
-
         $keyPair = $this->curve->generateKeyPair();
         $privateKey = $keyPair['privateKey'];
 
