@@ -57,7 +57,7 @@ class Curve25519 implements CurveInterface
                 'privateKey' => $secretKey,
                 'publicKey' => $publicKey,
             ];
-        } catch  (\Throwable $e) {
+        } catch (\Throwable $e) {
             throw new CurveException('Curve25519密钥对生成失败: ' . $e->getMessage());
         }
     }
@@ -84,7 +84,7 @@ class Curve25519 implements CurveInterface
             );
 
             return ParagonIE_Sodium_Compat::crypto_box_publickey($keypair);
-        } catch  (\Throwable $e) {
+        } catch (\Throwable $e) {
             throw new CurveException('Curve25519公钥派生失败: ' . $e->getMessage());
         }
     }
