@@ -56,7 +56,7 @@ class Curve448 implements CurveInterface
                 'publicKey' => $publicKey,
             ];
             */
-        } catch (\Exception $e) {
+        } catch  (\Throwable $e) {
             throw new CurveException('Curve448密钥对生成失败: ' . $e->getMessage());
         }
     }
@@ -84,7 +84,7 @@ class Curve448 implements CurveInterface
 
             return ParagonIE_Sodium_Compat::crypto_scalarmult_ristretto255_base($privateKey);
             */
-        } catch (\Exception $e) {
+        } catch  (\Throwable $e) {
             throw new CurveException('Curve448公钥派生失败: ' . $e->getMessage());
         }
     }
