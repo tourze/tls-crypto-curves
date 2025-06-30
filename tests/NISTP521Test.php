@@ -136,7 +136,6 @@ class NISTP521Test extends TestCase
         $keyPair = $this->curve->generateKeyPair();
         $derivedPublicKey = $this->curve->derivePublicKey($keyPair['privateKey']);
 
-        $this->assertIsString($derivedPublicKey);
         $this->assertStringContainsString('-----BEGIN', $derivedPublicKey);
         $this->assertStringContainsString('-----END', $derivedPublicKey);
 

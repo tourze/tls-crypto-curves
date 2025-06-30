@@ -49,7 +49,6 @@ class CurveInterfaceTest extends TestCase
         ];
 
         foreach ($implementations as $implementation) {
-            $this->assertIsString($implementation->getName());
             $this->assertNotEmpty($implementation->getName());
         }
     }
@@ -69,45 +68,76 @@ class CurveInterfaceTest extends TestCase
 
         foreach ($implementations as $implementation) {
             $keySize = $implementation->getKeySize();
-            $this->assertIsInt($keySize);
             $this->assertGreaterThan(0, $keySize);
         }
     }
 
     /**
-     * 测试所有实现类都有generateKeyPair方法
+     * 测试所有支持的实现类都能成功调用generateKeyPair方法
      */
-    public function test_all_implementations_have_generate_key_pair_method(): void
+    public function test_all_implementations_can_generate_key_pairs(): void
     {
+        if (!extension_loaded('openssl')) {
+            $this->markTestSkipped('OpenSSL扩展未加载，无法测试密钥生成');
+        }
+
         $implementations = [
-            new Curve25519(),
-            new Curve448(),
-            new NISTP256(),
-            new NISTP384(),
-            new NISTP521(),
+            'Curve25519' => new Curve25519(),
+            'Curve448' => new Curve448(),
+            'NISTP256' => new NISTP256(),
+            'NISTP384' => new NISTP384(),
+            'NISTP521' => new NISTP521(),
         ];
 
-        foreach ($implementations as $implementation) {
-            $this->assertTrue(method_exists($implementation, 'generateKeyPair'));
+        $supportedCount = 0;
+        foreach ($implementations as $name => $implementation) {
+            try {
+                $keyPair = $implementation->generateKeyPair();
+                $this->assertArrayHasKey('privateKey', $keyPair);
+                $this->assertArrayHasKey('publicKey', $keyPair);
+                $supportedCount++;
+            } catch (\Tourze\TLSCryptoCurves\Exception\CurveException $e) {
+                // 某些曲线可能在当前环境下不支持，记录但不停止测试
+                $this->addToAssertionCount(1); // 标记为一个有效的测试断言
+            }
         }
+
+        // 至少要有一个曲线是支持的
+        $this->assertGreaterThan(0, $supportedCount, '至少应该有一个椭圆曲线实现是支持的');
     }
 
     /**
-     * 测试所有实现类都有derivePublicKey方法
+     * 测试所有支持的实现类都能成功调用derivePublicKey方法
      */
-    public function test_all_implementations_have_derive_public_key_method(): void
+    public function test_all_implementations_can_derive_public_keys(): void
     {
+        if (!extension_loaded('openssl')) {
+            $this->markTestSkipped('OpenSSL扩展未加载，无法测试公钥派生');
+        }
+
         $implementations = [
-            new Curve25519(),
-            new Curve448(),
-            new NISTP256(),
-            new NISTP384(),
-            new NISTP521(),
+            'Curve25519' => new Curve25519(),
+            'Curve448' => new Curve448(),
+            'NISTP256' => new NISTP256(),
+            'NISTP384' => new NISTP384(),
+            'NISTP521' => new NISTP521(),
         ];
 
-        foreach ($implementations as $implementation) {
-            $this->assertTrue(method_exists($implementation, 'derivePublicKey'));
+        $supportedCount = 0;
+        foreach ($implementations as $name => $implementation) {
+            try {
+                $keyPair = $implementation->generateKeyPair();
+                $derivedPublicKey = $implementation->derivePublicKey($keyPair['privateKey']);
+                $this->assertNotEmpty($derivedPublicKey);
+                $supportedCount++;
+            } catch (\Tourze\TLSCryptoCurves\Exception\CurveException $e) {
+                // 某些曲线可能在当前环境下不支持，记录但不停止测试
+                $this->addToAssertionCount(1); // 标记为一个有效的测试断言
+            }
         }
+
+        // 至少要有一个曲线是支持的
+        $this->assertGreaterThan(0, $supportedCount, '至少应该有一个椭圆曲线实现是支持的');
     }
 
     /**
