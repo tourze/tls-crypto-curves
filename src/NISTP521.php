@@ -24,8 +24,6 @@ class NISTP521 implements CurveInterface
 
     /**
      * 获取曲线名称
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -34,8 +32,6 @@ class NISTP521 implements CurveInterface
 
     /**
      * 获取曲线的密钥大小（位）
-     *
-     * @return int
      */
     public function getKeySize(): int
     {
@@ -45,7 +41,8 @@ class NISTP521 implements CurveInterface
     /**
      * 生成密钥对
      *
-     * @return array 包含私钥和公钥的数组
+     * @return array<string, string> 包含私钥和公钥的数组
+     *
      * @throws CurveException 如果生成密钥对失败
      */
     public function generateKeyPair(): array
@@ -62,7 +59,7 @@ class NISTP521 implements CurveInterface
         ];
 
         $res = openssl_pkey_new($config);
-        if ($res === false) {
+        if (false === $res) {
             throw new CurveException('EC密钥对生成失败: ' . openssl_error_string());
         }
 
@@ -73,7 +70,7 @@ class NISTP521 implements CurveInterface
 
         // 导出公钥（PEM格式）
         $details = openssl_pkey_get_details($res);
-        if ($details === false) {
+        if (false === $details) {
             throw new CurveException('获取EC密钥详情失败: ' . openssl_error_string());
         }
 
@@ -89,7 +86,9 @@ class NISTP521 implements CurveInterface
      * 从私钥生成公钥
      *
      * @param string $privateKey 私钥（PEM格式）
+     *
      * @return string 公钥（PEM格式）
+     *
      * @throws CurveException 如果生成公钥失败
      */
     public function derivePublicKey(string $privateKey): string
@@ -101,18 +100,18 @@ class NISTP521 implements CurveInterface
 
         // 加载私钥
         $res = openssl_pkey_get_private($privateKey);
-        if ($res === false) {
+        if (false === $res) {
             throw new CurveException('加载EC私钥失败: ' . openssl_error_string());
         }
 
         // 获取密钥详情
         $details = openssl_pkey_get_details($res);
-        if ($details === false) {
+        if (false === $details) {
             throw new CurveException('获取EC密钥详情失败: ' . openssl_error_string());
         }
 
         // 检查密钥类型
-        if ($details['type'] !== OPENSSL_KEYTYPE_EC) {
+        if (OPENSSL_KEYTYPE_EC !== $details['type']) {
             throw new CurveException('提供的密钥不是EC密钥');
         }
 
